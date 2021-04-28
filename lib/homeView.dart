@@ -7,9 +7,14 @@ class HomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         home: Scaffold(
-      appBar: AppBar(title: Text("teste")),
-      body: MovieList(),
-    ));
+            appBar: AppBar(
+              title: Center(
+                child: Text("MOVIE: API"),
+              ),
+              backgroundColor: Colors.cyan,
+            ),
+            backgroundColor: Colors.deepPurple,
+            body: MovieList()));
   }
 }
 
@@ -22,40 +27,48 @@ class _MovieListState extends State<MovieList> {
   final HomeController controller = new HomeController();
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        ElevatedButton(
-          child: Text("teste"),
-          onPressed: () => setState(() {
-            controller.loadUpcomingMovies();
-          }),
-        ),
-        FutureBuilder<UpcomingMovies>(
-            future: controller.loadedMovies,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState != ConnectionState.done) {
-                return CircularProgressIndicator();
-              }
-              if (snapshot.hasData) {
-                return Container(child: Text(snapshot.data.movies[0].image));
-              } else {
-                return Container(child: Text("nada"));
-              }
-            }),
-      ],
+    return FutureBuilder<UpcomingMovies>(
+      future: controller.loadedMovies,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.done) {
+          controller.loadUpcomingMovies();
+          return CircularProgressIndicator();
+        }
+        if (snapshot.hasData) {
+          return ListView.builder(
+              itemCount: snapshot.data.movies.length,
+              itemBuilder: (context, index) {
+                return MovieCard(
+                  title: snapshot.data.movies[index].title,
+                  releaseDate: snapshot.data.movies[index].releaseDate,
+                  image: snapshot.data.movies[index].releaseDate,
+                );
+              });
+        } else {
+          return Text("blah");
+        }
+      },
     );
   }
 }
 
-class MovieCard extends StatefulWidget {
-  @override
-  _MovieCardState createState() => _MovieCardState();
-}
+class MovieCard extends StatelessWidget {
+  final String title;
+  final String releaseDate;
+  final String image;
 
-class _MovieCardState extends State<MovieCard> {
+  const MovieCard({Key key, this.title, this.releaseDate, this.image})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Container(
+      color: Colors.blue,
+      height: 500,
+      width: 50,
+      margin: EdgeInsets.fromLTRB(30, 30, 30, 0),
+      child: Column(
+        children: [Text(title), Text(releaseDate), Text(image)],
+      ),
+    );
   }
 }
