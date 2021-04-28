@@ -13,7 +13,6 @@ abstract class APIRequest<ResponseType extends APIResponse> {
   Future<ResponseType> fetchRequest({dynamic entry}) async {
     Map<String, dynamic> _queryParameters = {
       'api_key': _apiKey,
-      'page': entry,
     };
     //adicionar o uso da entry opcional
     http.Response response =

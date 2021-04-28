@@ -6,6 +6,8 @@ class HomeController {
 
   Future<UpcomingMovies> loadedMovies;
 
+  void callNextPage() {}
+
   void loadUpcomingMovies() {
     loadedMovies = model.fetchUpcomingMovies();
   }

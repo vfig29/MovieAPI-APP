@@ -8,44 +8,62 @@ class HomeView extends StatelessWidget {
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
+              bottom: PreferredSize(
+                  child: Container(
+                    color: Colors.white,
+                    height: 4.0,
+                  ),
+                  preferredSize: Size.fromHeight(4.0)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
               title: Center(
-                child: Text("MOVIE: API"),
+                child: Container(
+                    child: Container(
+                      margin: EdgeInsets.all(5),
+                      child: Text("UPCOMING MOVIES"),
+                    ),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: Colors.black)),
               ),
-              backgroundColor: Colors.cyan,
+              backgroundColor: Colors.black,
             ),
-            backgroundColor: Colors.deepPurple,
-            body: MovieList()));
+            backgroundColor: Colors.black,
+            body: UpcomingMovieList()));
   }
 }
 
-class MovieList extends StatefulWidget {
+class UpcomingMovieList extends StatefulWidget {
   @override
-  _MovieListState createState() => _MovieListState();
+  _UpcomingMovieListState createState() => _UpcomingMovieListState();
 }
 
-class _MovieListState extends State<MovieList> {
+class _UpcomingMovieListState extends State<UpcomingMovieList> {
   final HomeController controller = new HomeController();
   @override
   Widget build(BuildContext context) {
+    controller.loadUpcomingMovies();
     return FutureBuilder<UpcomingMovies>(
       future: controller.loadedMovies,
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
-          controller.loadUpcomingMovies();
-          return CircularProgressIndicator();
+          return Center(
+            child: CircularProgressIndicator(),
+          );
         }
         if (snapshot.hasData) {
           return ListView.builder(
               itemCount: snapshot.data.movies.length,
               itemBuilder: (context, index) {
-                return MovieCard(
+                return Center(
+                    child: MovieCard(
                   title: snapshot.data.movies[index].title,
                   releaseDate: snapshot.data.movies[index].releaseDate,
-                  image: snapshot.data.movies[index].releaseDate,
-                );
+                  image: snapshot.data.movies[index].image,
+                ));
               });
         } else {
-          return Text("blah");
+          return Text("Não há dados");
         }
       },
     );
@@ -62,13 +80,54 @@ class MovieCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.blue,
+      width: 500,
       height: 500,
-      width: 50,
       margin: EdgeInsets.fromLTRB(30, 30, 30, 0),
-      child: Column(
-        children: [Text(title), Text(releaseDate), Text(image)],
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          image: DecorationImage(image: NetworkImage(image), fit: BoxFit.fill)),
+      child: Stack(
+        children: [
+          MovieCardInfo(
+            text: title,
+            alignment: Alignment.bottomLeft,
+          ),
+          MovieCardInfo(
+            text: releaseDate,
+            alignment: Alignment.topRight,
+          )
+        ],
       ),
     );
+  }
+}
+
+class MovieCardInfo extends StatefulWidget {
+  final String text;
+  final Alignment alignment;
+
+  const MovieCardInfo({Key key, this.text, this.alignment}) : super(key: key);
+
+  @override
+  _MovieCardInfoState createState() => _MovieCardInfoState();
+}
+
+class _MovieCardInfoState extends State<MovieCardInfo> {
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+        alignment: widget.alignment,
+        child: Opacity(
+          opacity: 0.8,
+          child: Container(
+              decoration: BoxDecoration(
+                  color: Colors.black,
+                  border: Border.all(color: Colors.white, width: 2),
+                  borderRadius: BorderRadius.circular(40)),
+              child: Container(
+                  margin: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                  child: Text(widget.text,
+                      style: TextStyle(fontSize: 20, color: Colors.white)))),
+        ));
   }
 }
