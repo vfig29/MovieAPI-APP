@@ -5,7 +5,7 @@ class HomeView extends StatelessWidget {
   final HomeController controller = new HomeController();
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold();
   }
 }
 

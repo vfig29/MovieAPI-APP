@@ -1,3 +1,5 @@
+import 'MovieAPI/APIRequest.dart';
+
 class HomeModel {
-  final APIRequest = new APIRequest();
+  final APIRequest apiRequest = new APIRequest();
 }
