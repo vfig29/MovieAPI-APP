@@ -1,5 +1,12 @@
+import 'package:desafiomovieapi/MovieAPI/Movie.dart';
+
 import 'MovieAPI/APIRequest.dart';
 
 class HomeModel {
-  final APIRequest apiRequest = new APIRequest();
+  static const String _movieAPIkey = 'a5bc05fb630c9b7fdc560033345fa13e';
+  final APIUpcomingRequest apiRequest = new APIUpcomingRequest(_movieAPIkey);
+
+  Future<UpcomingMovies> fetchUpcomingMovies() {
+    return apiRequest.fetchRequest();
+  }
 }
