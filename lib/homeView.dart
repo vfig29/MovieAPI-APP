@@ -8,11 +8,12 @@ class HomeView extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           bottom: PreferredSize(
-              child: Container(
-                color: Colors.white,
-                height: 4.0,
-              ),
-              preferredSize: Size.fromHeight(4.0)),
+            child: Container(
+              color: Colors.teal,
+              height: 4.0,
+            ),
+            preferredSize: Size.fromHeight(4.0),
+          ),
           title: Center(
             child: Container(
                 child: Container(
@@ -65,8 +66,10 @@ class _UpcomingMovieListState extends State<UpcomingMovieList> {
                     image: snapshot.data.movies[index].image,
                   ));
                 });
-          } else {
-            return Text("Não há dados");
+          }
+          else if(snapshot.hasError){ Text("Um erro não esperado...")} 
+          else {
+            return Text("Um erro não esperado...");
           }
         },
       ),
@@ -93,7 +96,7 @@ class MovieCard extends StatelessWidget {
       child: Stack(
         children: [
           MovieCardInfo(
-            tittle: title,
+            title: title,
             releaseDate: releaseDate,
             alignment: Alignment.bottomLeft,
           )
@@ -104,11 +107,11 @@ class MovieCard extends StatelessWidget {
 }
 
 class MovieCardInfo extends StatefulWidget {
-  final String tittle;
+  final String title;
   final String releaseDate;
   final Alignment alignment;
 
-  const MovieCardInfo({Key key, this.tittle, this.releaseDate, this.alignment})
+  const MovieCardInfo({Key key, this.title, this.releaseDate, this.alignment})
       : super(key: key);
 
   @override
@@ -120,44 +123,38 @@ class _MovieCardInfoState extends State<MovieCardInfo> {
   Widget build(BuildContext context) {
     return Align(
         alignment: widget.alignment,
-        child: InkWell(
-            onTap: () {
-              setState(() {
-                print("teste");
-              });
-            },
-            child: Opacity(
-              opacity: 1,
-              child: Container(
-                  height: 65,
-                  width: MediaQuery.of(context).size.width,
-                  decoration: BoxDecoration(
-                    color: Colors.black,
-                    border: Border(
-                        bottom: BorderSide(color: Colors.white, width: 4),
-                        top: BorderSide(color: Colors.white, width: 4)),
+        child: Opacity(
+          opacity: 0.6,
+          child: Container(
+              height: 65,
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                color: Color(0xff000000),
+                border: Border(
+                    bottom: BorderSide(color: Colors.white, width: 4),
+                    top: BorderSide(color: Colors.white, width: 1)),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                        margin: EdgeInsets.fromLTRB(10, 5, 0, 0),
+                        child: Text(widget.title,
+                            style:
+                                TextStyle(fontSize: 20, color: Colors.white))),
                   ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Container(
-                            margin: EdgeInsets.fromLTRB(10, 5, 0, 0),
-                            child: Text(widget.tittle,
-                                style: TextStyle(
-                                    fontSize: 20, color: Colors.white))),
-                      ),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: Container(
-                            margin: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                            child: Text(widget.releaseDate,
-                                style: TextStyle(
-                                    fontSize: 15, color: Colors.white))),
-                      ),
-                    ],
-                  )),
-            )));
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Container(
+                        margin: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                        child: Text(widget.releaseDate,
+                            style:
+                                TextStyle(fontSize: 15, color: Colors.white))),
+                  ),
+                ],
+              )),
+        ));
   }
 }
