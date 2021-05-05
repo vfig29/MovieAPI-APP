@@ -66,10 +66,10 @@ class _UpcomingMovieListState extends State<UpcomingMovieList> {
                     image: snapshot.data.movies[index].image,
                   ));
                 });
-          }
-          else if(snapshot.hasError){ Text("Um erro não esperado...")} 
-          else {
+          } else if (snapshot.hasError) {
             return Text("Um erro não esperado...");
+          } else {
+            return Text("Estamos em manutenção... Tente novamente mais tarde.");
           }
         },
       ),
