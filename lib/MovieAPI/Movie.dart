@@ -1,5 +1,3 @@
-import 'package:desafiomovieapi/MovieAPI/APIrequest.dart';
-
 abstract class APIResponse {
   APIResponse.fromJSON(Map<String, dynamic> jsonMap);
 }

@@ -26,6 +26,7 @@ class HomeView extends StatelessWidget {
           ),
           backgroundColor: Colors.black,
         ),
+        backgroundColor: Colors.black,
         body: UpcomingMovieList());
   }
 }
@@ -37,9 +38,16 @@ class UpcomingMovieList extends StatefulWidget {
 
 class _UpcomingMovieListState extends State<UpcomingMovieList> {
   final HomeController controller = new HomeController();
+
+  @override
+  void initState() {
+    super.initState();
+    controller.callFirstPage();
+    controller.loadUpcomingMovies();
+  }
+
   @override
   Widget build(BuildContext context) {
-    controller.loadUpcomingMovies();
     return Container(
       decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -67,9 +75,15 @@ class _UpcomingMovieListState extends State<UpcomingMovieList> {
                   ));
                 });
           } else if (snapshot.hasError) {
-            return Text("Um erro não esperado...");
+            return Text(
+              "Um erro não esperado...",
+              style: TextStyle(color: Colors.amber),
+            );
           } else {
-            return Text("Estamos em manutenção... Tente novamente mais tarde.");
+            return Text(
+              "Estamos em manutenção",
+              style: TextStyle(color: Colors.amber),
+            );
           }
         },
       ),
@@ -122,39 +136,47 @@ class _MovieCardInfoState extends State<MovieCardInfo> {
   @override
   Widget build(BuildContext context) {
     return Align(
-        alignment: widget.alignment,
-        child: Opacity(
-          opacity: 0.6,
-          child: Container(
-              height: 65,
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                color: Color(0xff000000),
-                border: Border(
-                    bottom: BorderSide(color: Colors.white, width: 4),
-                    top: BorderSide(color: Colors.white, width: 1)),
+      alignment: widget.alignment,
+      child: Container(
+        height: 65,
+        width: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(
+          border: Border(
+              bottom: BorderSide(color: Colors.white, width: 4),
+              top: BorderSide(color: Colors.white, width: 1)),
+        ),
+        child: Stack(children: [
+          Opacity(opacity: 0.6, child: Container(color: Colors.black)),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Container(
+                    margin: EdgeInsets.fromLTRB(10, 5, 0, 0),
+                    child: RichText(
+                      overflow: TextOverflow.ellipsis,
+                      text: TextSpan(
+                        text: widget.title,
+                        style: TextStyle(fontSize: 20, color: Colors.white),
+                      ),
+                    )),
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Container(
-                        margin: EdgeInsets.fromLTRB(10, 5, 0, 0),
-                        child: Text(widget.title,
-                            style:
-                                TextStyle(fontSize: 20, color: Colors.white))),
-                  ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Container(
-                        margin: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                        child: Text(widget.releaseDate,
-                            style:
-                                TextStyle(fontSize: 15, color: Colors.white))),
-                  ),
-                ],
-              )),
-        ));
+              Align(
+                alignment: Alignment.centerRight,
+                child: Container(
+                    margin: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                    child: RichText(
+                      text: TextSpan(
+                        text: widget.releaseDate,
+                        style: TextStyle(fontSize: 15, color: Colors.white),
+                      ),
+                    )),
+              ),
+            ],
+          ),
+        ]),
+      ),
+    );
   }
 }
