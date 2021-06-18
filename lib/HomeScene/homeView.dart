@@ -1,5 +1,5 @@
 import 'package:desafiomovieapi/MovieAPI/Movie.dart';
-import 'package:desafiomovieapi/homeController.dart';
+import 'package:desafiomovieapi/HomeScene/homeViewModel.dart';
 import 'package:flutter/material.dart';
 
 class HomeView extends StatelessWidget {
@@ -37,13 +37,13 @@ class UpcomingMovieList extends StatefulWidget {
 }
 
 class _UpcomingMovieListState extends State<UpcomingMovieList> {
-  final HomeController controller = new HomeController();
+  final HomeViewModel viewModel = new HomeViewModel();
 
   @override
   void initState() {
     super.initState();
-    controller.callFirstPage();
-    controller.loadUpcomingMovies();
+    viewModel.callFirstPage();
+    viewModel.loadUpcomingMovies();
   }
 
   @override
@@ -55,23 +55,24 @@ class _UpcomingMovieListState extends State<UpcomingMovieList> {
               end: Alignment.bottomCenter,
               stops: [0.6, 1],
               colors: [Colors.black, Colors.teal])),
-      child: FutureBuilder<UpcomingMovies>(
-        future: controller.loadedMovies,
+      child: StreamBuilder<List<Movie>>(
+        stream: viewModel.streamLoadedPages.stream,
         builder: (context, snapshot) {
-          if (snapshot.connectionState != ConnectionState.done) {
+          if (snapshot.connectionState != ConnectionState.active) {
             return Center(
               child: CircularProgressIndicator(),
             );
           }
           if (snapshot.hasData) {
             return ListView.builder(
-                itemCount: snapshot.data.movies.length,
+                itemCount: snapshot.data.length,
                 itemBuilder: (context, index) {
+                  if (index == snapshot.data.length - 1) {
+                    viewModel.loadUpcomingMovies();
+                  }
                   return Center(
                       child: MovieCard(
-                    title: snapshot.data.movies[index].title,
-                    releaseDate: snapshot.data.movies[index].releaseDate,
-                    image: snapshot.data.movies[index].image,
+                    myMovie: snapshot.data[index],
                   ));
                 });
           } else if (snapshot.hasError) {
@@ -92,12 +93,9 @@ class _UpcomingMovieListState extends State<UpcomingMovieList> {
 }
 
 class MovieCard extends StatelessWidget {
-  final String title;
-  final String releaseDate;
-  final String image;
+  final Movie myMovie;
 
-  const MovieCard({Key key, this.title, this.releaseDate, this.image})
-      : super(key: key);
+  const MovieCard({Key key, this.myMovie}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -106,12 +104,16 @@ class MovieCard extends StatelessWidget {
       margin: EdgeInsets.fromLTRB(30, 30, 30, 0),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
-          image: DecorationImage(image: NetworkImage(image), fit: BoxFit.fill)),
+          image: DecorationImage(
+              image: (myMovie.image == Movie.imagePath)
+                  ? AssetImage("assets/images/place_holder.png")
+                  : NetworkImage(myMovie.image),
+              fit: BoxFit.fill)),
       child: Stack(
         children: [
           MovieCardInfo(
-            title: title,
-            releaseDate: releaseDate,
+            title: myMovie.title,
+            releaseDate: myMovie.releaseDate,
             alignment: Alignment.bottomLeft,
           )
         ],

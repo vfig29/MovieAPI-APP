@@ -24,6 +24,10 @@ abstract class APIRequest<ResponseType extends APIResponse> {
   Future<ResponseType> apiResponseValidator(http.Response requestResponse);
 }
 
+abstract class APIResponse {
+  APIResponse.fromJSON(Map<String, dynamic> jsonMap);
+}
+
 class APIUpcomingRequest extends APIRequest<UpcomingMovies> {
   @override
   String _requestPath = '/3/movie/upcoming';

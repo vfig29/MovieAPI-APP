@@ -1,4 +1,4 @@
-import 'package:desafiomovieapi/homeView.dart';
+import 'package:desafiomovieapi/HomeScene/homeView.dart';
 import 'package:flutter/material.dart';
 
 void main() {
