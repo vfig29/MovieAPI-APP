@@ -11,7 +11,7 @@ class MovieDetailParameters {
 }
 
 class MovieDetailView extends StatelessWidget {
-  final MovieDetailController controller = MovieDetailController();
+  final MovieViewModel viewModel = MovieViewModel();
   @override
   Widget build(BuildContext context) {
     final MovieDetailParameters myMovie =
@@ -114,7 +114,7 @@ class MovieDetailView extends StatelessWidget {
                         RowBox(
                           child: StarButton(
                             passedMovie: myMovie.passedMovie,
-                            controller: controller,
+                            viewModel: viewModel,
                           ),
                         ),
                       ],
@@ -213,19 +213,19 @@ class RowBox extends StatelessWidget {
 
 class StarButton extends StatefulWidget {
   final Movie passedMovie;
-  final MovieDetailController controller;
-  const StarButton({Key key, this.passedMovie, this.controller})
+  final MovieViewModel viewModel;
+  const StarButton({Key key, this.passedMovie, this.viewModel})
       : super(key: key);
   @override
   _StarButtonState createState() => _StarButtonState();
 }
 
 class _StarButtonState extends State<StarButton> {
-  IconData currentStarIcon;
+  IconData currentStarIcon = Icons.arrow_back;
   @override
   void initState() {
     super.initState();
-    currentStarIcon = widget.controller.getFavMark(myMovie: widget.passedMovie);
+    widget.viewModel.syncFavMark(myMovie: widget.passedMovie);
   }
 
   @override
@@ -233,14 +233,26 @@ class _StarButtonState extends State<StarButton> {
     return InkWell(
       onTap: () {
         setState(() {
-          currentStarIcon =
-              widget.controller.getFavMark(myMovie: widget.passedMovie);
+          widget.viewModel.setFavMark(myMovie: widget.passedMovie);
         });
       },
-      child: Icon(
-        currentStarIcon,
-        size: MediaQuery.of(context).size.height * 0.065,
-        color: Colors.white,
+      child: StreamBuilder<bool>(
+        stream: widget.viewModel.currentMovieFavStream.stream,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return Icon(
+              AppIcons.getFavIcon(snapshot.data),
+              size: MediaQuery.of(context).size.height * 0.065,
+              color: Colors.white,
+            );
+          } else {
+            return Icon(
+              Icons.warning,
+              size: MediaQuery.of(context).size.height * 0.065,
+              color: Colors.white,
+            );
+          }
+        },
       ),
     );
   }

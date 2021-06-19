@@ -1,5 +1,9 @@
 abstract class StorageAdapter {
-  void storeMovieFav(int movieId, bool value);
+  void storeMovieFav(int movieId);
 
-  void getMovieFav();
+  void removeMovieFav(int movieId);
+
+  Future<List<Map<String, dynamic>>> getAllMovieFav();
+
+  Future<List<Map<String, dynamic>>> getMovieFavById(int movieId);
 }

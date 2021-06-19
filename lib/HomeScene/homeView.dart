@@ -4,11 +4,34 @@ import 'package:desafiomovieapi/HomeScene/homeViewModel.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class HomeView extends StatelessWidget {
+class HomeView extends StatefulWidget {
+  @override
+  _HomeViewState createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView> {
+  final HomeViewModel viewModel = new HomeViewModel();
+
   @override
   Widget build(BuildContext context) {
     return AppBackGround(
       appBar: AppBar(
+        centerTitle: true,
+        actions: <Widget>[
+          IconButton(
+            hoverColor: AppColors.appGreen,
+            onPressed: () {
+              setState(() {
+                viewModel.filterFavorite();
+              });
+            },
+            icon: Icon(
+              AppIcons.getFavIcon(viewModel.favoriteState),
+              color: Colors.white,
+            ),
+            iconSize: 42,
+          )
+        ],
         bottom: PreferredSize(
           child: Container(
             color: AppColors.appGreen,
@@ -19,33 +42,35 @@ class HomeView extends StatelessWidget {
         title: Center(
           child: Container(
               child: Container(
-                margin: EdgeInsets.all(5),
-                child: Text("LANÇAMENTOS"),
-              ),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5), color: Colors.black)),
+                  margin: EdgeInsets.all(5),
+                  child: Center(child: Text("LANÇAMENTOS"))),
+              decoration:
+                  BoxDecoration(borderRadius: BorderRadius.circular(5))),
         ),
         backgroundColor: Colors.black,
       ),
-      body: UpcomingMovieList(),
+      body: UpcomingMovieList(
+        viewModel: viewModel,
+      ),
       title: "LANÇAMENTOS",
     );
   }
 }
 
 class UpcomingMovieList extends StatefulWidget {
+  final HomeViewModel viewModel;
+
+  const UpcomingMovieList({Key key, this.viewModel}) : super(key: key);
   @override
   _UpcomingMovieListState createState() => _UpcomingMovieListState();
 }
 
 class _UpcomingMovieListState extends State<UpcomingMovieList> {
-  final HomeViewModel viewModel = new HomeViewModel();
-
   @override
   void initState() {
     super.initState();
-    viewModel.callFirstPage();
-    viewModel.loadUpcomingMovies();
+    widget.viewModel.callFirstPage();
+    widget.viewModel.loadUpcomingMovies();
   }
 
   @override
@@ -58,7 +83,7 @@ class _UpcomingMovieListState extends State<UpcomingMovieList> {
               stops: [0.6, 1],
               colors: [Colors.black, AppColors.appGreen])),
       child: StreamBuilder<List<Movie>>(
-        stream: viewModel.streamLoadedPages.stream,
+        stream: widget.viewModel.streamLoadedPages.stream,
         builder: (context, snapshot) {
           if (snapshot.connectionState != ConnectionState.active) {
             return Center(
@@ -70,7 +95,7 @@ class _UpcomingMovieListState extends State<UpcomingMovieList> {
                 itemCount: snapshot.data.length,
                 itemBuilder: (context, index) {
                   if (index == snapshot.data.length - 1) {
-                    viewModel.loadUpcomingMovies();
+                    widget.viewModel.loadUpcomingMovies();
                   }
                   return Center(
                       child: MovieCard(
@@ -78,18 +103,29 @@ class _UpcomingMovieListState extends State<UpcomingMovieList> {
                   ));
                 });
           } else if (snapshot.hasError) {
-            return Text(
-              "Um erro não esperado...",
-              style: TextStyle(color: Colors.amber),
+            return ErrorText(
+              text: "Um erro não esperado...",
             );
           } else {
-            return Text(
-              "Estamos em manutenção",
-              style: TextStyle(color: Colors.amber),
+            return ErrorText(
+              text: "Estamos em manutenção",
             );
           }
         },
       ),
+    );
+  }
+}
+
+class ErrorText extends StatelessWidget {
+  final String text;
+  const ErrorText({Key key, this.text}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: TextStyle(color: Colors.amber),
     );
   }
 }

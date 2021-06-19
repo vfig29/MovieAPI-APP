@@ -1,17 +1,54 @@
 import 'package:sqflite/sqflite.dart';
-
+import 'package:path/path.dart';
 import 'StorageAdapter.dart';
 
 class SQLAdapter extends StorageAdapter {
-  static Database? _database;
+  static Database _database;
 
-  @override
-  void getMovieFav() {
-    // TODO: implement getMovieFav
+  Future<Database> get database async {
+    _database = (_database ?? await initDB());
+
+    return _database;
+  }
+
+  initDB() async {
+    String path = join(await getDatabasesPath(), 'movie_database.db');
+    String onCreateQuery = 'CREATE TABLE FavMovies (id INTEGER PRIMARY KEY )';
+
+    return await openDatabase(path,
+        onCreate: (db, version) => db.execute(onCreateQuery), version: 1);
   }
 
   @override
-  void storeMovieFav(int movieId, bool value) {
-    // TODO: implement storeMovieFav
+  Future<List<Map<String, dynamic>>> getAllMovieFav() async {
+    final Database db = await database;
+    var results = db.rawQuery('SELECT * FROM FavMovies');
+    return results;
+  }
+
+  @override
+  void removeMovieFav(int movieId) async {
+    final Database db = await database;
+    String sqlQuery = 'DELETE FROM FavMovies WHERE id = ?';
+    var args = [movieId];
+    await db.rawDelete(sqlQuery, args);
+    print('deleteDone');
+  }
+
+  @override
+  void storeMovieFav(int movieId) async {
+    final Database db = await database;
+    String sqlQuery = 'INSERT INTO FavMovies(id) VALUES(?)';
+    var values = [movieId];
+    await db.rawInsert(sqlQuery, values);
+    print('storeDone');
+  }
+
+  @override
+  Future<List<Map<String, dynamic>>> getMovieFavById(int movieId) async {
+    final Database db = await database;
+    var args = [movieId];
+    var results = db.rawQuery('SELECT * FROM FavMovies WHERE id = ?', args);
+    return results;
   }
 }

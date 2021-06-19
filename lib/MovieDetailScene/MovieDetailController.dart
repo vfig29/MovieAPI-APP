@@ -1,23 +1,38 @@
+import 'dart:async';
 import 'package:desafiomovieapi/MovieAPI/MovieData.dart';
 import 'package:desafiomovieapi/MovieDetailScene/MovieDetailModel.dart';
-import 'package:flutter/material.dart';
 
-class MovieDetailController {
+class MovieViewModel {
   final MovieDetailModel movieDetailModel = new MovieDetailModel();
+  StreamController<bool> currentMovieFavStream = new StreamController();
 
   void saveMovieAsFavorite(Movie favoriteMovie) {
-    movieDetailModel.modifyFavoriteKeyById(favoriteMovie.id, true);
+    movieDetailModel.saveFavoriteKeyById(favoriteMovie.id);
   }
 
-  void removeMovieFromFavorite(Movie favoriteMovie) {
-    movieDetailModel.modifyFavoriteKeyById(favoriteMovie.id, false);
+  void deleteMovieFromFavorite(Movie favoriteMovie) {
+    movieDetailModel.deleteFavoriteKeyById(favoriteMovie.id);
   }
 
-  bool checkMovieIsFavorite(Movie favoriteMovie) {
-    return movieDetailModel.getFavoriteKeyById(favoriteMovie.id);
+  Future<bool> checkMovieIsFavorite(Movie favoriteMovie) async {
+    return await movieDetailModel.checkFavoriteKeyById(favoriteMovie.id);
   }
 
-  IconData getFavMark({Movie myMovie}) {
-    return true ? Icons.star : Icons.star_border;
+  void setFavMark({Movie myMovie}) {
+    checkMovieIsFavorite(myMovie)
+        .then((value) => {
+              value
+                  ? deleteMovieFromFavorite(myMovie)
+                  : saveMovieAsFavorite(myMovie),
+            })
+        .then((value) {
+      syncFavMark(myMovie: myMovie);
+    });
+  }
+
+  void syncFavMark({Movie myMovie}) async {
+    checkMovieIsFavorite(myMovie).then((value) {
+      currentMovieFavStream.add(value);
+    });
   }
 }
