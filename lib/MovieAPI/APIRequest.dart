@@ -14,6 +14,7 @@ abstract class APIRequest<ResponseType extends APIResponse> {
     Map<String, dynamic> _queryParameters = {
       'api_key': _apiKey,
       'page': entry.toString(),
+      'language': 'pt-BR',
     };
     //adicionar o uso da entry opcional
     http.Response response =

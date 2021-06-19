@@ -1,5 +1,7 @@
 import 'package:desafiomovieapi/MovieAPI/Movie.dart';
 import 'package:desafiomovieapi/HomeScene/homeModel.dart';
+import 'package:desafiomovieapi/MovieDetailScene/MovieDetailView.dart';
+import 'package:flutter/material.dart';
 import 'dart:async';
 
 class HomeViewModel {
@@ -32,5 +34,11 @@ class HomeViewModel {
       moviesList.addAll(element.movies);
     });
     return moviesList;
+  }
+
+  static void goTomovieDetailScreen(BuildContext context, Movie movie) {
+    MovieDetailParameters parameters =
+        new MovieDetailParameters(passedMovie: movie);
+    Navigator.pushNamed(context, 'MovieDetail', arguments: parameters);
   }
 }

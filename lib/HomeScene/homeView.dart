@@ -1,33 +1,35 @@
+import 'package:desafiomovieapi/AppCommonWidgets.dart';
 import 'package:desafiomovieapi/MovieAPI/Movie.dart';
 import 'package:desafiomovieapi/HomeScene/homeViewModel.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          bottom: PreferredSize(
-            child: Container(
-              color: Colors.teal,
-              height: 4.0,
-            ),
-            preferredSize: Size.fromHeight(4.0),
+    return AppBackGround(
+      appBar: AppBar(
+        bottom: PreferredSize(
+          child: Container(
+            color: AppColors.appGreen,
+            height: 4.0,
           ),
-          title: Center(
-            child: Container(
-                child: Container(
-                  margin: EdgeInsets.all(5),
-                  child: Text("UPCOMING MOVIES"),
-                ),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    color: Colors.black)),
-          ),
-          backgroundColor: Colors.black,
+          preferredSize: Size.fromHeight(4.0),
+        ),
+        title: Center(
+          child: Container(
+              child: Container(
+                margin: EdgeInsets.all(5),
+                child: Text("LANÇAMENTOS"),
+              ),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5), color: Colors.black)),
         ),
         backgroundColor: Colors.black,
-        body: UpcomingMovieList());
+      ),
+      body: UpcomingMovieList(),
+      title: "LANÇAMENTOS",
+    );
   }
 }
 
@@ -54,7 +56,7 @@ class _UpcomingMovieListState extends State<UpcomingMovieList> {
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               stops: [0.6, 1],
-              colors: [Colors.black, Colors.teal])),
+              colors: [Colors.black, AppColors.appGreen])),
       child: StreamBuilder<List<Movie>>(
         stream: viewModel.streamLoadedPages.stream,
         builder: (context, snapshot) {
@@ -98,26 +100,30 @@ class MovieCard extends StatelessWidget {
   const MovieCard({Key key, this.myMovie}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 500,
-      height: 500,
-      margin: EdgeInsets.fromLTRB(30, 30, 30, 0),
-      decoration: BoxDecoration(
+    return InkWell(
+      child: Container(
+        width: 500,
+        height: 500,
+        margin: EdgeInsets.fromLTRB(30, 30, 30, 0),
+        decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
           image: DecorationImage(
               image: (myMovie.image == Movie.imagePath)
                   ? AssetImage("assets/images/place_holder.png")
                   : NetworkImage(myMovie.image),
-              fit: BoxFit.fill)),
-      child: Stack(
-        children: [
-          MovieCardInfo(
-            title: myMovie.title,
-            releaseDate: myMovie.releaseDate,
-            alignment: Alignment.bottomLeft,
-          )
-        ],
+              fit: BoxFit.cover),
+        ),
+        child: Stack(
+          children: [
+            MovieCardInfo(
+              title: myMovie.title,
+              releaseDate: myMovie.releaseDate,
+              alignment: Alignment.bottomLeft,
+            )
+          ],
+        ),
       ),
+      onTap: () => HomeViewModel.goTomovieDetailScreen(context, myMovie),
     );
   }
 }
@@ -137,6 +143,8 @@ class MovieCardInfo extends StatefulWidget {
 class _MovieCardInfoState extends State<MovieCardInfo> {
   @override
   Widget build(BuildContext context) {
+    String formattedDate =
+        DateFormat('dd/MM/yyyy').format(DateTime.parse(widget.releaseDate));
     return Align(
       alignment: widget.alignment,
       child: Container(
@@ -170,7 +178,7 @@ class _MovieCardInfoState extends State<MovieCardInfo> {
                     margin: EdgeInsets.fromLTRB(0, 0, 10, 0),
                     child: RichText(
                       text: TextSpan(
-                        text: widget.releaseDate,
+                        text: formattedDate,
                         style: TextStyle(fontSize: 15, color: Colors.white),
                       ),
                     )),
