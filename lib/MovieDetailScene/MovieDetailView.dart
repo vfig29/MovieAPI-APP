@@ -1,5 +1,5 @@
 import 'package:desafiomovieapi/AppCommonWidgets.dart';
-import 'package:desafiomovieapi/MovieAPI/Movie.dart';
+import 'package:desafiomovieapi/MovieAPI/MovieData.dart';
 import 'package:desafiomovieapi/MovieDetailScene/MovieDetailController.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -224,7 +224,6 @@ class _StarButtonState extends State<StarButton> {
   IconData currentStarIcon;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     currentStarIcon = widget.controller.getFavMark(myMovie: widget.passedMovie);
   }

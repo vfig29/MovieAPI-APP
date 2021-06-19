@@ -1,4 +1,4 @@
-import 'package:desafiomovieapi/MovieAPI/Movie.dart';
+import 'package:desafiomovieapi/MovieAPI/MovieData.dart';
 import 'package:desafiomovieapi/MovieDetailScene/MovieDetailModel.dart';
 import 'package:flutter/material.dart';
 

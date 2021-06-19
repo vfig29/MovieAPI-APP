@@ -1,5 +1,5 @@
 import 'package:desafiomovieapi/AppCommonWidgets.dart';
-import 'package:desafiomovieapi/MovieAPI/Movie.dart';
+import 'package:desafiomovieapi/MovieAPI/MovieData.dart';
 import 'package:desafiomovieapi/HomeScene/homeViewModel.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';

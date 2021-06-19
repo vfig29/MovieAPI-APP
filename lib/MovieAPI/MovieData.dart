@@ -1,4 +1,4 @@
-import 'package:desafiomovieapi/MovieAPI/APIRequest.dart';
+import 'package:desafiomovieapi/MovieAPI/APIRequestData.dart';
 
 class UpcomingMovies implements APIResponse {
   static int totalPages = 1;
@@ -33,6 +33,8 @@ class Movie implements APIResponse {
         ? double.parse(jsonMap['vote_average'].toString())
         : 0.0;
 
-    overview = (jsonMap['overview'] ?? "Sem resumo.");
+    overview = ((jsonMap['overview'] ?? "") == "")
+        ? "Sem Resumo."
+        : jsonMap['overview'];
   }
 }

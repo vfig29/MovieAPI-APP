@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:desafiomovieapi/MovieAPI/Movie.dart';
+import 'package:desafiomovieapi/MovieAPI/MovieData.dart';
 import 'package:http/http.dart' as http;
 
 abstract class APIRequest<ResponseType extends APIResponse> {
