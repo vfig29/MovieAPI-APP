@@ -1,6 +1,6 @@
 import 'package:desafiomovieapi/AppCommonWidgets.dart';
 import 'package:desafiomovieapi/MovieAPI/MovieData.dart';
-import 'package:desafiomovieapi/MovieDetailScene/MovieDetailController.dart';
+import 'package:desafiomovieapi/MovieDetailScene/MovieDetailViewModel.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -17,7 +17,7 @@ class MovieDetailView extends StatelessWidget {
     final MovieDetailParameters myMovie =
         ModalRoute.of(context).settings.arguments as MovieDetailParameters;
     if (myMovie == null) {
-      Navigator.popUntil(context, ModalRoute.withName('/'));
+      Navigator.pop(context);
     }
     //
     List<String> formattedDate = DateFormat('dd/MM,yyyy')
@@ -173,7 +173,7 @@ class MovieDetailView extends StatelessWidget {
                     margin: EdgeInsets.all(30),
                     child: FloatingActionButton(
                       onPressed: () {
-                        Navigator.popUntil(context, ModalRoute.withName('/'));
+                        Navigator.pop(context);
                       },
                       child: Icon(Icons.arrow_back),
                       backgroundColor: Colors.blueGrey.withOpacity(0.5),

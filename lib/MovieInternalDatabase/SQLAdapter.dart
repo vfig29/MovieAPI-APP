@@ -32,7 +32,6 @@ class SQLAdapter extends StorageAdapter {
     String sqlQuery = 'DELETE FROM FavMovies WHERE id = ?';
     var args = [movieId];
     await db.rawDelete(sqlQuery, args);
-    print('deleteDone');
   }
 
   @override
@@ -41,7 +40,6 @@ class SQLAdapter extends StorageAdapter {
     String sqlQuery = 'INSERT INTO FavMovies(id) VALUES(?)';
     var values = [movieId];
     await db.rawInsert(sqlQuery, values);
-    print('storeDone');
   }
 
   @override

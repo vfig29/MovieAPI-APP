@@ -10,6 +10,8 @@ abstract class AppIcons {
   }
 }
 
+class RefreshScreen {}
+
 class AppBackGround extends StatelessWidget {
   final Widget body;
   final String title;

@@ -19,7 +19,6 @@ class _HomeViewState extends State<HomeView> {
         centerTitle: true,
         actions: <Widget>[
           IconButton(
-            hoverColor: AppColors.appGreen,
             onPressed: () {
               setState(() {
                 viewModel.filterFavorite();
@@ -99,6 +98,7 @@ class _UpcomingMovieListState extends State<UpcomingMovieList> {
                   }
                   return Center(
                       child: MovieCard(
+                    viewModel: widget.viewModel,
                     myMovie: snapshot.data[index],
                   ));
                 });
@@ -132,8 +132,9 @@ class ErrorText extends StatelessWidget {
 
 class MovieCard extends StatelessWidget {
   final Movie myMovie;
+  final HomeViewModel viewModel;
 
-  const MovieCard({Key key, this.myMovie}) : super(key: key);
+  const MovieCard({Key key, this.myMovie, this.viewModel}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -159,7 +160,7 @@ class MovieCard extends StatelessWidget {
           ],
         ),
       ),
-      onTap: () => HomeViewModel.goTomovieDetailScreen(context, myMovie),
+      onTap: () => viewModel.goTomovieDetailScreen(context, myMovie),
     );
   }
 }

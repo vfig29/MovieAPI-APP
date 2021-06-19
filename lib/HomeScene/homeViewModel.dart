@@ -33,8 +33,13 @@ class HomeViewModel {
     }
   }
 
-  void filterFavorite() async {
+  void filterFavorite() {
     _onlyFavoriteFlag = !_onlyFavoriteFlag;
+    refreshMovies();
+  }
+
+  void refreshMovies() async {
+    print("refreshed!");
     if (_onlyFavoriteFlag) {
       streamLoadedPages.add(await getPagesFavoriteMovies());
     } else {
@@ -64,9 +69,10 @@ class HomeViewModel {
     return moviesList;
   }
 
-  static void goTomovieDetailScreen(BuildContext context, Movie movie) {
+  void goTomovieDetailScreen(BuildContext context, Movie movie) {
     MovieDetailParameters parameters =
         new MovieDetailParameters(passedMovie: movie);
-    Navigator.pushNamed(context, 'MovieDetail', arguments: parameters);
+    Navigator.pushNamed(context, 'MovieDetail', arguments: parameters)
+        .then((value) => refreshMovies());
   }
 }
