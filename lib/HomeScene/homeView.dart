@@ -128,7 +128,7 @@ class MovieCard extends StatelessWidget {
   }
 }
 
-class MovieCardInfo extends StatefulWidget {
+class MovieCardInfo extends StatelessWidget {
   final String title;
   final String releaseDate;
   final Alignment alignment;
@@ -137,16 +137,11 @@ class MovieCardInfo extends StatefulWidget {
       : super(key: key);
 
   @override
-  _MovieCardInfoState createState() => _MovieCardInfoState();
-}
-
-class _MovieCardInfoState extends State<MovieCardInfo> {
-  @override
   Widget build(BuildContext context) {
     String formattedDate =
-        DateFormat('dd/MM/yyyy').format(DateTime.parse(widget.releaseDate));
+        DateFormat('dd/MM/yyyy').format(DateTime.parse(releaseDate));
     return Align(
-      alignment: widget.alignment,
+      alignment: alignment,
       child: Container(
         height: 65,
         width: MediaQuery.of(context).size.width,
@@ -167,7 +162,7 @@ class _MovieCardInfoState extends State<MovieCardInfo> {
                     child: RichText(
                       overflow: TextOverflow.ellipsis,
                       text: TextSpan(
-                        text: widget.title,
+                        text: title,
                         style: TextStyle(fontSize: 20, color: Colors.white),
                       ),
                     )),

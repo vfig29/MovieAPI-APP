@@ -33,6 +33,6 @@ class Movie implements APIResponse {
         ? double.parse(jsonMap['vote_average'].toString())
         : 0.0;
 
-    overview = (jsonMap['overview'] ?? "");
+    overview = (jsonMap['overview'] ?? "Sem resumo.");
   }
 }

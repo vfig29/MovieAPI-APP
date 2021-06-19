@@ -1,5 +1,6 @@
 import 'package:desafiomovieapi/AppCommonWidgets.dart';
 import 'package:desafiomovieapi/MovieAPI/Movie.dart';
+import 'package:desafiomovieapi/MovieDetailScene/MovieDetailController.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -10,6 +11,7 @@ class MovieDetailParameters {
 }
 
 class MovieDetailView extends StatelessWidget {
+  final MovieDetailController controller = MovieDetailController();
   @override
   Widget build(BuildContext context) {
     final MovieDetailParameters myMovie =
@@ -18,8 +20,9 @@ class MovieDetailView extends StatelessWidget {
       Navigator.popUntil(context, ModalRoute.withName('/'));
     }
     //
-    String formattedDate = DateFormat('dd/MM \n yyyy')
-        .format(DateTime.parse(myMovie.passedMovie.releaseDate));
+    List<String> formattedDate = DateFormat('dd/MM,yyyy')
+        .format(DateTime.parse(myMovie.passedMovie.releaseDate))
+        .split(',');
     //
     return AppBackGround(
       body: Container(
@@ -51,42 +54,91 @@ class MovieDetailView extends StatelessWidget {
                     margin: EdgeInsets.only(
                         top: MediaQuery.of(context).size.height * 0.005,
                         bottom: MediaQuery.of(context).size.height * 0.005),
-                    color: Colors.blue,
+                    //color: Colors.blue,
                     width: MediaQuery.of(context).size.width * 0.9,
-                    height: MediaQuery.of(context).size.height * 0.12,
+                    height: MediaQuery.of(context).size.height * 0.08,
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         RowBox(
                           child: Center(
                               child: RichText(
+                            textAlign: TextAlign.center,
                             text: TextSpan(
-                              text: formattedDate,
-                              style:
-                                  TextStyle(fontSize: 25, color: Colors.white),
+                              children: <TextSpan>[
+                                TextSpan(
+                                    text: formattedDate[0],
+                                    style: TextStyle(
+                                      fontSize: 30,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    )),
+                                TextSpan(
+                                    text: '\n' + formattedDate[1],
+                                    style: TextStyle(
+                                      fontSize: 25,
+                                      color: Colors.white,
+                                    )),
+                              ],
                             ),
                           )),
                         ),
-                        RowBox(),
+                        RowBox(
+                          child: Center(
+                            child: RichText(
+                              textAlign: TextAlign.center,
+                              text: TextSpan(
+                                children: <TextSpan>[
+                                  TextSpan(
+                                    text: myMovie.passedMovie.voteAverage
+                                        .toString(),
+                                    style: TextStyle(
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: '\n Score',
+                                    style: TextStyle(
+                                      fontSize: 25,
+                                    ),
+                                  ),
+                                ],
+                                style: TextStyle(
+                                  fontSize: 25,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        RowBox(
+                          child: StarButton(
+                            passedMovie: myMovie.passedMovie,
+                            controller: controller,
+                          ),
+                        ),
                       ],
                     ),
                   ),
                   Container(
                     decoration: BoxDecoration(
                       border: Border(
-                          top: BorderSide(color: Colors.white, width: 1),
-                          bottom: BorderSide(color: Colors.white, width: 1)),
+                        top: BorderSide(color: Colors.white, width: 1),
+                      ),
                     ),
                     width: MediaQuery.of(context).size.width * 0.9,
-                    height: MediaQuery.of(context).size.height * 0.12,
+                    height: MediaQuery.of(context).size.height * 0.15,
                     child: SingleChildScrollView(
                       child: Container(
+                        margin: EdgeInsets.fromLTRB(
+                            0, MediaQuery.of(context).size.height * 0.01, 0, 0),
                         height: MediaQuery.of(context).size.height,
                         child: RichText(
                           textAlign: TextAlign.justify,
                           text: TextSpan(
                             text: myMovie.passedMovie.overview,
                             style: TextStyle(
-                                fontSize: 18,
+                                fontSize: 20,
                                 color: Colors.white,
                                 letterSpacing: 0.4),
                           ),
@@ -151,11 +203,46 @@ class RowBox extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: child,
-      color: Colors.red,
       margin: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width * 0.03, 0,
           MediaQuery.of(context).size.width * 0.03, 0),
       width: MediaQuery.of(context).size.width * 0.2,
       height: MediaQuery.of(context).size.height * 0.08,
+    );
+  }
+}
+
+class StarButton extends StatefulWidget {
+  final Movie passedMovie;
+  final MovieDetailController controller;
+  const StarButton({Key key, this.passedMovie, this.controller})
+      : super(key: key);
+  @override
+  _StarButtonState createState() => _StarButtonState();
+}
+
+class _StarButtonState extends State<StarButton> {
+  IconData currentStarIcon;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    currentStarIcon = widget.controller.getFavMark(myMovie: widget.passedMovie);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        setState(() {
+          currentStarIcon =
+              widget.controller.getFavMark(myMovie: widget.passedMovie);
+        });
+      },
+      child: Icon(
+        currentStarIcon,
+        size: MediaQuery.of(context).size.height * 0.065,
+        color: Colors.white,
+      ),
     );
   }
 }

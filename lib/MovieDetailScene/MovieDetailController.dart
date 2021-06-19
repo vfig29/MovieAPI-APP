@@ -1,5 +1,6 @@
 import 'package:desafiomovieapi/MovieAPI/Movie.dart';
 import 'package:desafiomovieapi/MovieDetailScene/MovieDetailModel.dart';
+import 'package:flutter/material.dart';
 
 class MovieDetailController {
   final MovieDetailModel movieDetailModel = new MovieDetailModel();
@@ -14,5 +15,9 @@ class MovieDetailController {
 
   bool checkMovieIsFavorite(Movie favoriteMovie) {
     return movieDetailModel.getFavoriteKeyById(favoriteMovie.id);
+  }
+
+  IconData getFavMark({Movie myMovie}) {
+    return true ? Icons.star : Icons.star_border;
   }
 }
