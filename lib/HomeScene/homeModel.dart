@@ -6,11 +6,11 @@ import '../MovieAPI/APIRequestData.dart';
 
 class HomeModel {
   static const String _movieAPIkey = 'a5bc05fb630c9b7fdc560033345fa13e';
-  final APIRequest apiRequest = new APIUpcomingRequest(_movieAPIkey);
+  final APIRequest apiUpcomingRequest = new APIUpcomingRequest(_movieAPIkey);
   final StorageAdapter storageAdapter = SQLAdapter();
 
   Future<UpcomingMovies> fetchUpcomingMovies({int loadedPage}) {
-    return apiRequest.fetchRequest(entry: loadedPage);
+    return apiUpcomingRequest.fetchRequest(entry: loadedPage);
   }
 
   Future<List<int>> getAllFavoriteIdsFromDB() async {

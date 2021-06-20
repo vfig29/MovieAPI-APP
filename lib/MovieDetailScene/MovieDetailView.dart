@@ -42,11 +42,14 @@ class MovieDetailView extends StatelessWidget {
                         border: Border.all(color: AppColors.appGreen, width: 2),
                         color: Colors.black),
                     child: Center(
-                        child: RichText(
-                      overflow: TextOverflow.ellipsis,
-                      text: TextSpan(
-                        text: myMovie.passedMovie.title,
-                        style: TextStyle(fontSize: 30, color: Colors.white),
+                        child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: RichText(
+                        overflow: TextOverflow.ellipsis,
+                        text: TextSpan(
+                          text: myMovie.passedMovie.title,
+                          style: TextStyle(fontSize: 30, color: Colors.white),
+                        ),
                       ),
                     )),
                   ),
@@ -62,50 +65,56 @@ class MovieDetailView extends StatelessWidget {
                       children: [
                         RowBox(
                           child: Center(
-                              child: RichText(
-                            textAlign: TextAlign.center,
-                            text: TextSpan(
-                              children: <TextSpan>[
-                                TextSpan(
-                                    text: formattedDate[0],
-                                    style: TextStyle(
-                                      fontSize: 30,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                    )),
-                                TextSpan(
-                                    text: '\n' + formattedDate[1],
-                                    style: TextStyle(
-                                      fontSize: 25,
-                                      color: Colors.white,
-                                    )),
-                              ],
-                            ),
-                          )),
-                        ),
-                        RowBox(
-                          child: Center(
+                              child: FittedBox(
+                            fit: BoxFit.scaleDown,
                             child: RichText(
                               textAlign: TextAlign.center,
                               text: TextSpan(
                                 children: <TextSpan>[
                                   TextSpan(
-                                    text: myMovie.passedMovie.voteAverage
-                                        .toString(),
-                                    style: TextStyle(
-                                      fontSize: 30,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
+                                      text: formattedDate[0],
+                                      style: TextStyle(
+                                        fontSize: 30,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      )),
                                   TextSpan(
-                                    text: '\n Score',
-                                    style: TextStyle(
-                                      fontSize: 25,
-                                    ),
-                                  ),
+                                      text: '\n' + formattedDate[1],
+                                      style: TextStyle(
+                                        fontSize: 25,
+                                        color: Colors.white,
+                                      )),
                                 ],
-                                style: TextStyle(
-                                  fontSize: 25,
+                              ),
+                            ),
+                          )),
+                        ),
+                        RowBox(
+                          child: Center(
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: RichText(
+                                textAlign: TextAlign.center,
+                                text: TextSpan(
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                      text: myMovie.passedMovie.voteAverage
+                                          .toString(),
+                                      style: TextStyle(
+                                        fontSize: 30,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: '\n Score',
+                                      style: TextStyle(
+                                        fontSize: 25,
+                                      ),
+                                    ),
+                                  ],
+                                  style: TextStyle(
+                                    fontSize: 25,
+                                  ),
                                 ),
                               ),
                             ),
@@ -230,29 +239,32 @@ class _StarButtonState extends State<StarButton> {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        setState(() {
-          widget.viewModel.setFavMark(myMovie: widget.passedMovie);
-        });
-      },
-      child: StreamBuilder<bool>(
-        stream: widget.viewModel.currentMovieFavStream.stream,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return Icon(
-              AppIcons.getFavIcon(snapshot.data),
-              size: MediaQuery.of(context).size.height * 0.065,
-              color: Colors.white,
-            );
-          } else {
-            return Icon(
-              Icons.warning,
-              size: MediaQuery.of(context).size.height * 0.065,
-              color: Colors.white,
-            );
-          }
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      child: InkWell(
+        onTap: () {
+          setState(() {
+            widget.viewModel.setFavMark(myMovie: widget.passedMovie);
+          });
         },
+        child: StreamBuilder<bool>(
+          stream: widget.viewModel.currentMovieFavStream.stream,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return Icon(
+                AppIcons.getFavIcon(snapshot.data),
+                size: MediaQuery.of(context).size.height * 0.065,
+                color: Colors.white,
+              );
+            } else {
+              return Icon(
+                Icons.warning,
+                size: MediaQuery.of(context).size.height * 0.065,
+                color: Colors.white,
+              );
+            }
+          },
+        ),
       ),
     );
   }

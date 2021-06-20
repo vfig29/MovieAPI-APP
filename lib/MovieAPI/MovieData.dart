@@ -21,7 +21,7 @@ class Movie implements APIResponse {
   String releaseDate = "";
   String image = "";
   String overview = "";
-  double voteAverage = 0;
+  String voteAverage = "";
 
   Movie.fromJSON(Map<String, dynamic> jsonMap) {
     id = jsonMap['id'] != null ? int.parse(jsonMap['id'].toString()) : -1;
@@ -29,9 +29,11 @@ class Movie implements APIResponse {
     releaseDate = (jsonMap['release_date'] ?? "");
     image = imagePath + (jsonMap['poster_path'] ?? "");
 
-    voteAverage = jsonMap['vote_average'] != null
-        ? double.parse(jsonMap['vote_average'].toString())
-        : 0.0;
+    voteAverage = (jsonMap['vote_average'] != null
+        ? ((double.parse(jsonMap['vote_average'].toString()) == 0)
+            ? "N/A"
+            : jsonMap['vote_average'].toString())
+        : "N/A");
 
     overview = ((jsonMap['overview'] ?? "") == "")
         ? "Sem Resumo."

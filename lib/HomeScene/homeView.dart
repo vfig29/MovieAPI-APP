@@ -18,17 +18,21 @@ class _HomeViewState extends State<HomeView> {
       appBar: AppBar(
         centerTitle: true,
         actions: <Widget>[
-          IconButton(
-            onPressed: () {
-              setState(() {
-                viewModel.filterFavorite();
-              });
-            },
-            icon: Icon(
-              AppIcons.getFavIcon(viewModel.favoriteState),
-              color: Colors.white,
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: IconButton(
+              tooltip: "Favorites Filter",
+              onPressed: () {
+                setState(() {
+                  viewModel.filterFavorite();
+                });
+              },
+              icon: Icon(
+                AppIcons.getFavIcon(viewModel.favoriteState),
+                color: Colors.white,
+              ),
+              iconSize: 42,
             ),
-            iconSize: 42,
           )
         ],
         bottom: PreferredSize(
@@ -193,25 +197,39 @@ class MovieCardInfo extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Align(
-                alignment: Alignment.centerLeft,
+                alignment: Alignment.topLeft,
                 child: Container(
-                    margin: EdgeInsets.fromLTRB(10, 5, 0, 0),
-                    child: RichText(
-                      overflow: TextOverflow.ellipsis,
-                      text: TextSpan(
-                        text: title,
-                        style: TextStyle(fontSize: 20, color: Colors.white),
+                    margin: EdgeInsets.fromLTRB(
+                        MediaQuery.of(context).size.width * 0.025,
+                        MediaQuery.of(context).size.height * 0.005,
+                        MediaQuery.of(context).size.width * 0.025,
+                        0),
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: RichText(
+                        overflow: TextOverflow.ellipsis,
+                        text: TextSpan(
+                          text: title,
+                          style: TextStyle(fontSize: 20, color: Colors.white),
+                        ),
                       ),
                     )),
               ),
               Align(
-                alignment: Alignment.centerRight,
+                alignment: Alignment.bottomLeft,
                 child: Container(
-                    margin: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                    child: RichText(
-                      text: TextSpan(
-                        text: formattedDate,
-                        style: TextStyle(fontSize: 15, color: Colors.white),
+                    margin: EdgeInsets.fromLTRB(
+                        MediaQuery.of(context).size.width * 0.025,
+                        0,
+                        MediaQuery.of(context).size.width * 0.025,
+                        0),
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: RichText(
+                        text: TextSpan(
+                          text: formattedDate,
+                          style: TextStyle(fontSize: 15, color: Colors.white),
+                        ),
                       ),
                     )),
               ),

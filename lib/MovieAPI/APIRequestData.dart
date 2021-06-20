@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 abstract class APIRequest<ResponseType extends APIResponse> {
   final String authority = 'api.themoviedb.org';
   String _requestPath;
+  String entryKey;
   final String _apiKey;
 
   APIRequest(this._apiKey);
@@ -13,9 +14,9 @@ abstract class APIRequest<ResponseType extends APIResponse> {
   Future<ResponseType> fetchRequest({dynamic entry}) async {
     Map<String, dynamic> _queryParameters = {
       'api_key': _apiKey,
-      'page': entry.toString(),
       'language': 'pt-BR',
     };
+    _queryParameters.addAll({entryKey: entry.toString()});
     //adicionar o uso da entry opcional
     http.Response response =
         await http.get(Uri.https(authority, _requestPath, _queryParameters));
@@ -30,6 +31,8 @@ abstract class APIResponse {
 }
 
 class APIUpcomingRequest extends APIRequest<UpcomingMovies> {
+  @override
+  String entryKey = 'page';
   @override
   String _requestPath = '/3/movie/upcoming';
 
